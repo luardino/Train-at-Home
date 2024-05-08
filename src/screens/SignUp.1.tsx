@@ -6,22 +6,8 @@ import { Input } from '@components/input';
 import { Button } from '@components/button';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-
-type formDataProps = {
-    name: string;
-    email: string;
-    Password: string;
-    Confirm_Password: string;
-};
-
-const signUpSchema = yup.object({
-    name: yup.string().required('Enter your name.'),
-    email: yup.string().required('Enter your e-mail.').email('Invalid e-mail.'),
-    Password: yup.string().required('Enter your password.').min(6, 'The password must have at least 6 digits.'),
-    Confirm_Password: yup.string().required('Confirm the password.').oneOf([yup.ref('Password')], 'Different password confirmation.' ),
-});
+import { formDataProps, signUpSchema } from './signup';
 
 export function SignUp() {
     const navigation = useNavigation();
@@ -42,7 +28,9 @@ export function SignUp() {
         control,
         handleSubmit,
         formState: { errors },
-    } = useForm<formDataProps>({resolver: yupResolver(signUpSchema)})
+    } = useForm<formDataProps>({
+        resolver: yupResolver(signUpSchema),
+    });
 
     return (
         <ScrollView
@@ -124,7 +112,6 @@ export function SignUp() {
                                 value={value}
                                 onSubmitEditing={handleSubmit(handleSignUp)}
                                 returnKeyType="send"
-                                errorMessage={errors.Confirm_Password?.message}
                             />
                         )}
                     />
@@ -137,7 +124,7 @@ export function SignUp() {
                 <Button
                     title="Back to login"
                     variant="outline"
-                    mt={12}
+                    mt={24}
                     onPress={handleGoBack}
                 />
             </VStack>
